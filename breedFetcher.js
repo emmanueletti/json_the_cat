@@ -1,12 +1,16 @@
 const request = require('request');
 
+// first find out what cat user would like to query
+const breedQuery = process.argv[2].toLowerCase().trim();
+
+// download all the breeds data set
+// filter the data set to the cat user would like to know about
+// display the description property of that cat
+// if filter returns empty array - console log - 'cat not found'
 const getCatBreed = () => {
   return new Promise((resolve, reject) => {
+    // HTTP request wrapped in a promise to make use of .then dyntax
     request('https://api.thecatapi.com/v1/breeds', function (error, response, body) {
-      // console.error('error:', error); // Print the error if one occurred
-      // console.log('statusCode:', response && response.statusCode); // Print the response status code if a response was received
-      // console.log('body:', body); // Print the HTML for the Google homepage.
-
       if (error) {
         reject(error);
       }
@@ -16,16 +20,22 @@ const getCatBreed = () => {
   });
 };
 
-getCatBreed()
+getCatBreed(breedQuery)
   .then((data) => {
-    const catInfo = JSON.parse(data.body);
-    const name = 'Siberian';
-    console.log(
-      catInfo.filter((el) => {
-        return el.name === name;
-      })
-    );
+    const breedData = JSON.parse(data.body);
+
+    // find the info for the user requested cat
+    const output = breedData.filter((el) => {
+      return el.name.toLowerCase() === breedQuery;
+    });
+
+    // empty array returned after filter for query
+    if (output.length === 0) {
+      console.log(`Couldn't find that breed`);
+      return;
+    }
+    console.log(output[0].description);
   })
   .catch((error) => {
-    console.log(error.name);
+    console.log('🚨🚨', error);
   });
