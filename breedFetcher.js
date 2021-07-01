@@ -11,7 +11,7 @@ const fetchBreedData = (query) => {
       if (error) {
         reject(error);
       }
-      const statusCode = response.statusCode;
+      // const statusCode = response.statusCode;
       resolve({ body, query });
     });
   });

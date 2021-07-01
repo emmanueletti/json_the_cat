@@ -1,5 +1,4 @@
 const breedFilter = (data) => {
-  console.log(data.query);
   const breedData = JSON.parse(data.body);
 
   // find the info for the user requested cat
